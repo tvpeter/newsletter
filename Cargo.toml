@@ -18,19 +18,10 @@ tokio = { version = "1.36.0", features = ["macros", "rt-multi-thread"] }
 serde = { version = "1", features = [ "derive" ] }
 config = { version = "0.14.0"}
 dotenv = "0.15.0"
+uuid = { version = "1", features = ["v4"] }
+chrono = { version = "0.4.22", default-features = false, features = ["clock"] }
+sqlx = { version = "0.7", default-features = false, features = ["runtime-tokio-rustls", "macros", "postgres", "uuid", "chrono", "migrate"] }
 
-# Using table-like toml syntax to avoid a super-long line!
-[dependencies.sqlx]
-version = "0.5.7"
-default-features = false
-features = [
-"runtime-actix-rustls",
-"macros",
-"postgres",
-"uuid",
-"chrono",
-"migrate"
-]
 
 [dev-dependencies]
 reqwest="0.11"
