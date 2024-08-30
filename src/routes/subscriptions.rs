@@ -11,16 +11,14 @@ pub struct FormData {
 
 pub async fn subscribe(form: web::Form<FormData>, pool: web::Data<PgPool>) -> HttpResponse {
     let request_id = Uuid::new_v4();
-    tracing::info!(
-        "Request {}: adding '{}' '{}' as a new subscriber",
-        request_id,
-        form.email,
-        form.name
+    let request_span = tracing::info_span!(
+        "adding new subscriber",
+        %request_id,
+        subscriber_email = %form.email,
+        subscriber_name = %form.name
     );
-    tracing::info!(
-        "request {}: saving new subscriber details to database",
-        request_id
-    );
+    let _request_span_guard = request_span.enter();
+    tracing::info_span!("saving new subscriber details to database");
     match sqlx::query!(
         r#"
     INSERT INTO subscriptions (id, email, name, subscribed_at)
@@ -35,9 +33,9 @@ pub async fn subscribe(form: web::Form<FormData>, pool: web::Data<PgPool>) -> Ht
     .await
     {
         Ok(_) => {
-            tracing::info!(
+            tracing::info_span!(
                 "request {}: new subscriber details have been saved",
-                request_id
+                %request_id
             );
             HttpResponse::Ok().finish()
         }
