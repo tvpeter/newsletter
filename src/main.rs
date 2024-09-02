@@ -5,6 +5,7 @@ use zero2prod::{
     startup::run,
     telemetry::{get_subscriber, init_subscriber},
 };
+use secrecy::ExposeSecret;
 
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
@@ -14,7 +15,7 @@ async fn main() -> std::io::Result<()> {
     // Panic if we can't read configuration
     let configuration = get_configuration().expect("failed to read configuration");
 
-    let connection = PgPool::connect(&configuration.database.connection_string())
+    let connection = PgPool::connect(&configuration.database.connection_string().expose_secret())
         .await
         .expect("failed to connect to db");
 
