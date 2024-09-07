@@ -1,3 +1,4 @@
+use secrecy::ExposeSecret;
 use sqlx::PgPool;
 use std::net::TcpListener;
 use zero2prod::{
@@ -5,7 +6,6 @@ use zero2prod::{
     startup::run,
     telemetry::{get_subscriber, init_subscriber},
 };
-use secrecy::ExposeSecret;
 
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
